@@ -462,23 +462,12 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy);color:var
               <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--slate-light);">Attendance Trend</div>
               <div style="font-size:.73rem;color:var(--text-secondary);margin-top:2px;">Present per service · recent 16</div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span style="display:flex;align-items:center;gap:4px;font-size:.67rem;color:#60A5FA;font-weight:700;"><span style="width:12px;height:3px;background:#60A5FA;border-radius:2px;display:inline-block;"></span>City</span>
-              <span style="display:flex;align-items:center;gap:4px;font-size:.67rem;color:#A78BFA;font-weight:700;"><span style="width:12px;height:3px;background:#A78BFA;border-radius:2px;display:inline-block;"></span>Airport</span>
-            </div>
+            <div style="display:flex;gap:8px;align-items:center;"></div>
           </div>
           <canvas id="trend-canvas" height="150" style="width:100%;display:block;"></canvas>
         </div>
         <!-- Right column -->
         <div style="display:flex;flex-direction:column;gap:12px;">
-          <!-- Donut -->
-          <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;">
-            <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--slate-light);margin-bottom:.85rem;">Venue Split</div>
-            <div style="display:flex;align-items:center;gap:14px;">
-              <canvas id="donut-canvas" width="80" height="80" style="flex-shrink:0;"></canvas>
-              <div id="donut-legend" style="flex:1;display:flex;flex-direction:column;gap:7px;"></div>
-            </div>
-          </div>
           <!-- Monthly bar -->
           <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;flex:1;overflow:hidden;min-width:0;">
             <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--slate-light);margin-bottom:.85rem;">Monthly Avg</div>
@@ -1081,8 +1070,8 @@ function renderAttendanceRecords(){
     const pct=r.percentage||0; const col=pct>80?'#4ADE80':pct>=30?'#FBD324':'#F87171';
     const absent=(r.totalMembers||0)-(r.presentCount||0);
     const venueLabel = r.venue ? '⛪ Chennai' : '';
-    const venueColor = r.venue ? (r.venue.includes('Airport') ? '#60A5FA' : '#A78BFA') : '';
-    const venueBg   = r.venue ? (r.venue.includes('Airport') ? 'rgba(96,165,250,0.13)' : 'rgba(167,139,250,0.13)') : '';
+    const venueColor = r.venue ? 'var(--gold)' : '';
+    const venueBg   = r.venue ? 'var(--gold-light)' : '';
     return `<div class="att-record-card">
       <div class="att-record-header">
         <div><div class="att-record-day" style="display:flex;align-items:center;gap:6px;">${dayName} · ${r.event||'Service'}${venueLabel?`<span style="font-size:.62rem;font-weight:700;padding:1px 7px;border-radius:20px;background:${venueBg};color:${venueColor};letter-spacing:.05em;">${venueLabel}</span>`:''}</div><div class="att-record-date">${fmtDate(r.date)}</div></div>
@@ -1840,8 +1829,6 @@ function renderCharts(){
   const pills = [
     { label:'Avg Attendance', value: avgPct+'%',  sub: recs.length+' services', col: avgPct>=30?'#4ADE80':'#F87171' },
     { label:'Peak Service',   value: peak.presentCount, sub: fmtDate(peak.date), col: GOLD_C },
-    { label:'🏙 City Avg',   value: cityAvg,  sub: cityRecs.length+' services', col: CITY_C },
-    { label:'✈ Airport Avg', value: airAvg,   sub: airRecs.length+' services',  col: AIR_C },
     { label:'Total Attendance', value: totalPresent, sub: 'cumulative present', col: '#4ADE80' },
   ];
   document.getElementById('stat-pills').innerHTML = pills.map(p=>`
@@ -1922,10 +1909,8 @@ function renderCharts(){
       });
     };
 
-    const cityPts = sep(r=>!r.venue||r.venue.includes('City'));
-    const airPts  = sep(r=>r.venue&&r.venue.includes('Airport'));
-    drawLine(cityPts, CITY_C);
-    drawLine(airPts,  AIR_C);
+    const allPts = sep(r=>true);
+    drawLine(allPts, GOLD_C);
 
     // x-axis labels (every ~3)
     ctx.fillStyle=textCol; ctx.font=`500 9px 'Plus Jakarta Sans',sans-serif`;
@@ -1938,52 +1923,6 @@ function renderCharts(){
         ctx.fillText((d.getMonth()+1)+'/'+(d.getDate()), x, pad.t+cH+6);
       }
     });
-  }
-
-  // ── Donut ──
-  const dCanvas = document.getElementById('donut-canvas');
-  if(dCanvas){
-    const dpr = window.devicePixelRatio||1;
-    dCanvas.width=80*dpr; dCanvas.height=80*dpr;
-    dCanvas.style.width='80px'; dCanvas.style.height='80px';
-    const dc=dCanvas.getContext('2d'); dc.scale(dpr,dpr);
-    const cx=40,cy=40,r=32,thick=11;
-    const cityCount  = cityRecs.reduce((s,r)=>s+(r.presentCount||0),0);
-    const airCount   = airRecs.reduce((s,r)=>s+(r.presentCount||0),0);
-    const noVenCount = recs.filter(r=>!r.venue).reduce((s,r)=>s+(r.presentCount||0),0);
-    const total2 = cityCount+airCount+noVenCount||1;
-    const slices = [
-      {v:cityCount, c:CITY_C, label:'City'},
-      {v:airCount,  c:AIR_C,  label:'Airport'},
-      ...(noVenCount?[{v:noVenCount,c:'#5A6278',label:'Other'}]:[])
-    ];
-    // bg ring
-    dc.beginPath(); dc.arc(cx,cy,r,0,Math.PI*2);
-    dc.strokeStyle=gridCol; dc.lineWidth=thick; dc.stroke();
-    let angle=-Math.PI/2;
-    slices.forEach(s=>{
-      if(!s.v) return;
-      const sweep = (s.v/total2)*Math.PI*2;
-      dc.beginPath(); dc.arc(cx,cy,r,angle,angle+sweep);
-      dc.strokeStyle=s.c; dc.lineWidth=thick; dc.lineCap='round'; dc.stroke();
-      angle+=sweep;
-    });
-    // center label
-    dc.fillStyle=isDark?'#E2E6F0':'#1A1D28';
-    dc.font=`700 13px 'Plus Jakarta Sans',sans-serif`;
-    dc.textAlign='center'; dc.textBaseline='middle';
-    dc.fillText(total2, cx, cy-5);
-    dc.font=`500 8px 'Plus Jakarta Sans',sans-serif`;
-    dc.fillStyle=textCol;
-    dc.fillText('total', cx, cy+7);
-
-    // legend
-    document.getElementById('donut-legend').innerHTML = slices.map(s=>`
-      <div style="display:flex;align-items:center;gap:6px;">
-        <span style="width:9px;height:9px;border-radius:50%;background:${s.c};flex-shrink:0;"></span>
-        <span style="font-size:.72rem;color:var(--text-secondary);">${s.label}</span>
-        <span style="font-size:.72rem;font-weight:700;color:var(--text-primary);margin-left:auto;">${s.v} <span style="font-weight:400;color:var(--text-secondary);">(${Math.round(s.v/total2*100)}%)</span></span>
-      </div>`).join('');
   }
 
   // ── Monthly avg bar chart ──
