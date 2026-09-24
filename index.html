@@ -1338,7 +1338,8 @@ async function saveAttendanceRecord(auto=false){
   const event=document.getElementById('mark-att-event').value;
   if(!date){ if(!auto) showToast('Please select a date','error'); return; }
   const pool=attLivePool();
-  const presentIds=[...markAttPresent];
+  const liveDocIds=new Set(pool.map(m=>m._docId));
+  const presentIds=[...markAttPresent].filter(id=>liveDocIds.has(id));
   const absentIds=pool.filter(m=>!markAttPresent.has(m._docId)).map(m=>m._docId);
   const record={
     date, event, venue:selectedVenue||'',
@@ -1598,7 +1599,7 @@ function clearVPhoneErr(){
 
 function exportNewComers(){ openNcExportDialog(); }
 function openNcExportDialog(){
-  const all=members.filter(m=>!m.archived&&m.status==='New'&&!(m.id||'').startsWith('KG-QA'));
+  const all=members.filter(m=>!m.archived&&m.joined&&!(m.id||'').startsWith('KG-QA'));
   if(!all.length){ showToast('No New Comers on record yet','error'); return; }
   document.getElementById('nce-from').value='';
   document.getElementById('nce-to').value=localDateStr();
@@ -1609,13 +1610,13 @@ function closeNcExportDialog(){ document.getElementById('nc-export-overlay').cla
 function _ncExportUpdateCount(){
   const from=document.getElementById('nce-from').value;
   const to=document.getElementById('nce-to').value;
-  const n=members.filter(m=>!m.archived&&m.status==='New'&&!(m.id||'').startsWith('KG-QA')&&(!from||(m.joined||'')>=from)&&(!to||(m.joined||'')<=to)).length;
+  const n=members.filter(m=>!m.archived&&m.joined&&!(m.id||'').startsWith('KG-QA')&&(!from||(m.joined||'')>=from)&&(!to||(m.joined||'')<=to)).length;
   document.getElementById('nce-count').textContent=n+' newcomer'+(n!==1?'s':'');
 }
 function runNcExport(){
   const from=document.getElementById('nce-from').value;
   const to=document.getElementById('nce-to').value;
-  const list=members.filter(m=>!m.archived&&m.status==='New'&&!(m.id||'').startsWith('KG-QA')&&(!from||(m.joined||'')>=from)&&(!to||(m.joined||'')<=to)).sort((a,b)=>(b.joined||'').localeCompare(a.joined||''));
+  const list=members.filter(m=>!m.archived&&m.joined&&!(m.id||'').startsWith('KG-QA')&&(!from||(m.joined||'')>=from)&&(!to||(m.joined||'')<=to)).sort((a,b)=>(b.joined||'').localeCompare(a.joined||''));
   closeNcExportDialog();
   if(!list.length){ showToast('No New Comers match that date range','error'); return; }
   _doNcExport(list);
