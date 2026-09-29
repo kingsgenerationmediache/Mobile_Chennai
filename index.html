@@ -2164,8 +2164,12 @@ function renderNcDashboard(){
   const registered = nc.length;
   const headcount  = nc.reduce((s,m)=>s+(parseInt(m.memberCount||m.count||1)),0);
 
-  const overdueList  = nc.filter(m=>{ const d=m.followUpDue||m.dueDate||m.due; return d && d<todayStr && !(m.followUpDone||m.done); });
-  const upcomingList = nc.filter(m=>{ const d=m.followUpDue||m.dueDate||m.due; return d && d>=todayStr && !(m.followUpDone||m.done); });
+  // Only status==='New' members are eligible for follow-up tracking.
+  // Overdue = still New AND due date has passed (not yet moved to Active).
+  // Upcoming = still New AND due date is today or in the future.
+  const newOnly = nc.filter(m=> m.status==='New');
+  const overdueList  = newOnly.filter(m=>{ const d=m.nextStepDue||m.followUpDue||m.dueDate||m.due; return d && d<todayStr; });
+  const upcomingList = newOnly.filter(m=>{ const d=m.nextStepDue||m.followUpDue||m.dueDate||m.due; return d && d>=todayStr; });
 
   document.getElementById('nc-kpi-registered').textContent = registered;
   document.getElementById('nc-kpi-headcount').textContent  = headcount;
@@ -2214,7 +2218,7 @@ function renderNcDashboard(){
   if(overdueList.length){
     if(fuTitle) fuTitle.textContent=`Overdue follow-ups (${overdueList.length})`;
     fuList.innerHTML=overdueList.map(m=>{
-      const due=m.followUpDue||m.dueDate||m.due||'';
+      const due=m.nextStepDue||m.followUpDue||m.dueDate||m.due||'';
       let daysLate='';
       if(due){ const diff=Math.round((today-new Date(due+'T00:00:00'))/(86400000)); daysLate=diff>0?`OVERDUE ${diff}d`:'OVERDUE'; }
       return `<div class="fu-row"><span>${escapeHtml(m.name)}</span><span class="fu-badge fu-overdue">${daysLate}</span></div>`;
