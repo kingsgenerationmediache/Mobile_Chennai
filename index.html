@@ -267,6 +267,64 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy);color:var
   #stat-pills{grid-template-columns:1fr;}
   .login-card{padding:1.75rem 1rem;}
 }
+/* ── TAB NAV ── */
+.tab-nav{display:flex;gap:4px;padding:.45rem 1rem;background:var(--surface);border-bottom:1px solid var(--border);}
+.tab-btn{padding:.35rem .9rem;border-radius:8px;border:none;background:none;font-family:inherit;font-size:.78rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .15s;}
+.tab-btn:hover{color:var(--text-primary);background:var(--surface2);}
+.tab-btn.active{background:var(--gold-light);color:var(--gold);}
+
+/* ── NEWCOMERS DASHBOARD ── */
+#nc-dash-page{display:none;}
+#nc-dash-page .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+@media(max-width:600px){#nc-dash-page .kpi-row{grid-template-columns:repeat(2,1fr);}}
+#nc-dash-page .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
+#nc-dash-page .kpi-val{font-size:28px;font-weight:500;color:var(--text-primary);line-height:1;}
+#nc-dash-page .kpi-val.warn{color:#eb6834;}
+#nc-dash-page .kpi-val.ok{color:#1baf7a;}
+#nc-dash-page .kpi-lbl{font-size:12px;color:var(--text-secondary);margin-top:4px;}
+#nc-dash-page .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem;}
+@media(max-width:600px){#nc-dash-page .charts-row{grid-template-columns:1fr;}}
+#nc-dash-page .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
+#nc-dash-page .area-list{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;}
+#nc-dash-page .area-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;}
+#nc-dash-page .area-name{flex:1;color:var(--text-primary);}
+#nc-dash-page .area-bar-wrap{width:80px;background:rgba(255,255,255,0.08);border-radius:3px;height:6px;}
+[data-theme="light"] #nc-dash-page .area-bar-wrap{background:rgba(0,0,0,0.08);}
+#nc-dash-page .area-bar-fill{height:6px;border-radius:3px;background:var(--gold);}
+#nc-dash-page .area-count{font-size:12px;color:var(--text-secondary);min-width:24px;text-align:right;}
+#nc-dash-page .nc-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:10px;font-size:12px;color:var(--text-secondary);}
+#nc-dash-page .leg-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;}
+#nc-dash-page .followup-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;}
+#nc-dash-page .fu-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px;color:var(--text-primary);}
+#nc-dash-page .fu-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:500;white-space:nowrap;}
+#nc-dash-page .fu-overdue{background:rgba(235,104,52,0.15);color:#eb6834;border:1px solid rgba(235,104,52,0.25);}
+#nc-dash-page .fu-upcoming{background:rgba(27,175,122,0.15);color:#1baf7a;border:1px solid rgba(27,175,122,0.25);}
+#nc-dash-page .section-title{font-size:13px;font-weight:500;color:var(--text-secondary);margin:0 0 10px;}
+.nc-dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.nc-dash-title{font-size:13px;font-weight:500;color:var(--text-secondary);}
+.nc-btn-export{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:#0D0F14;border:none;border-radius:7px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.nc-btn-export:hover{opacity:.88;}
+/* print ── newcomers dash */
+@media print{
+  .topbar,.tab-nav{display:none!important;}
+  #att-page{display:none!important;}
+  #nc-dash-page{display:block!important;}
+  body,#nc-dash-page{background:#fff!important;color:#111!important;}
+  .nc-btn-export{display:none!important;}
+  #nc-dash-page .kpi{background:#f4f6fb!important;border:1px solid #dde1ec!important;}
+  #nc-dash-page .kpi-val{color:#111!important;}
+  #nc-dash-page .kpi-lbl{color:#666!important;}
+  #nc-dash-page .kpi-val.warn{color:#c0451a!important;}
+  #nc-dash-page .kpi-val.ok{color:#148a5e!important;}
+  #nc-dash-page .chart-card,#nc-dash-page .area-list,#nc-dash-page .followup-section{background:#f4f6fb!important;border:1px solid #dde1ec!important;}
+  #nc-dash-page .section-title{color:#555!important;}
+  #nc-dash-page .area-name,#nc-dash-page .fu-row{color:#111!important;}
+  #nc-dash-page .area-bar-wrap{background:#dde1ec!important;}
+  #nc-dash-page .nc-legend{color:#555!important;}
+  #nc-dash-page .fu-badge.fu-overdue{background:#fde8df!important;color:#c0451a!important;border-color:#f3bfac!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  canvas{background:#fff!important;border-radius:4px;}
+}
+
 /* Visitor modal: match app_cbe label style (no uppercase, no letter-spacing) */
 .visitor-modal {
   display: flex;
@@ -436,10 +494,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy);color:var
       </button>
       <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀</button>
     </div>
+    <!-- Tab Nav -->
+    <div class="tab-nav" id="main-tab-nav">
+      <button class="tab-btn active" id="tab-att" onclick="switchTab('att')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16" style="margin-right:4px;vertical-align:-1px;"><rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M5 8l2.5 2.5 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Attendance
+      </button>
+      <button class="tab-btn" id="tab-nc" onclick="switchTab('nc')">
+        <svg width="12" height="12" fill="none" viewBox="0 0 16 16" style="margin-right:4px;vertical-align:-1px;"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3 2.7-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Newcomers
+      </button>
+    </div>
   </div>
 
   <!-- content -->
-  <div class="content">
+  <div class="content" id="att-page" style="display:block;">
     <div class="page-head">
       <div class="page-title"></div>
       <div class="rec-filter-bar">
@@ -480,9 +549,74 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--navy);color:var
     <div id="att-records-grid" class="att-records-grid">
       <div style="grid-column:1/-1;text-align:center;padding:2.5rem;color:var(--slate-light);font-size:.85rem;">Loading…</div>
     </div>
-  </div>
-</div>
+  </div><!-- end #att-page -->
 
+  <!-- ══ NEWCOMERS DASHBOARD PAGE ══ -->
+<div id="nc-dash-page" class="content" style="display:none;max-width:900px;">
+
+  <div class="nc-dash-header">
+    <p class="nc-dash-title">Kings Generation Chennai — Newcomers Dashboard · <span id="nc-dash-date"></span></p>
+    <button class="nc-btn-export" onclick="ncExportPDF()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export PDF
+    </button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-row" id="nc-kpi-row">
+    <div class="kpi"><div class="kpi-val" id="nc-kpi-registered">—</div><div class="kpi-lbl">Newcomers registered</div></div>
+    <div class="kpi"><div class="kpi-val" id="nc-kpi-headcount">—</div><div class="kpi-lbl">Total headcount</div></div>
+    <div class="kpi"><div class="kpi-val warn" id="nc-kpi-overdue">—</div><div class="kpi-lbl">Follow-ups overdue</div></div>
+    <div class="kpi"><div class="kpi-val ok" id="nc-kpi-upcoming">—</div><div class="kpi-lbl">Follow-ups upcoming</div></div>
+  </div>
+
+  <!-- Row 1 charts -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="section-title">Newcomers by Sunday</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="nc-week-chart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title">Family size distribution</div>
+      <div style="position:relative;height:180px;">
+        <canvas id="nc-size-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: areas + follow-up donut -->
+  <div class="charts-row">
+    <div class="area-list">
+      <div class="section-title">Top areas by newcomers</div>
+      <div id="nc-area-list">
+        <div style="color:var(--slate-light);font-size:.82rem;">Loading…</div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title">Follow-up status</div>
+      <div class="nc-legend" id="nc-fu-legend">
+        <span><span class="leg-dot" style="background:#eb6834"></span>Overdue — <span id="nc-leg-overdue">—</span></span>
+        <span><span class="leg-dot" style="background:#1baf7a"></span>Upcoming — <span id="nc-leg-upcoming">—</span></span>
+      </div>
+      <div style="position:relative;height:160px;">
+        <canvas id="nc-fu-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overdue follow-up list -->
+  <div class="followup-section" id="nc-followup-section">
+    <div class="section-title" id="nc-followup-title">Overdue follow-ups</div>
+    <div id="nc-followup-list" style="display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;">
+      <div style="color:var(--slate-light);font-size:.82rem;">Loading…</div>
+    </div>
+  </div>
+
+</div><!-- end #nc-dash-page -->
+
+</div><!-- end .app -->
 
 <!-- MARK ATTENDANCE MODAL -->
 <div class="overlay" id="mark-att-overlay" style="padding:0;pointer-events:none;" onclick="if(event.target===this)closeMarkAttendance()">
@@ -1995,6 +2129,182 @@ function renderCharts(){
 }
 window.renderCharts=renderCharts;
 
+// ── Tab Switching ──
+let _currentTab = 'att';
+function switchTab(tab){
+  _currentTab = tab;
+  document.getElementById('att-page').style.display    = tab==='att' ? 'block' : 'none';
+  document.getElementById('nc-dash-page').style.display = tab==='nc'  ? 'block' : 'none';
+  document.getElementById('tab-att').classList.toggle('active', tab==='att');
+  document.getElementById('tab-nc').classList.toggle('active',  tab==='nc');
+  if(tab==='nc') renderNcDashboard();
+}
+window.switchTab=switchTab;
+
+// ── Newcomers Dashboard ──
+let _ncWeekChart=null, _ncSizeChart=null, _ncFuChart=null;
+const NC_TICK  = ()=>{ const isDark=document.documentElement.getAttribute('data-theme')!=='light'; return isDark?'#8B95B0':'#5A6278'; };
+const NC_GRID  = ()=>{ const isDark=document.documentElement.getAttribute('data-theme')!=='light'; return isDark?'rgba(255,255,255,0.08)':'rgba(0,0,0,0.08)'; };
+const NC_SURF  = ()=>{ const isDark=document.documentElement.getAttribute('data-theme')!=='light'; return isDark?'#1C2030':'#FFFFFF'; };
+
+function renderNcDashboard(){
+  // derive newcomer members (status==='New' or joined field present)
+  const nc = members.filter(m=> !m.archived && (m.status==='New' || m.joined));
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = localDateStr(today);
+
+  // date label
+  const dateEl = document.getElementById('nc-dash-date');
+  if(dateEl){
+    const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    dateEl.textContent = `${mo[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  }
+
+  // KPIs
+  const registered = nc.length;
+  const headcount  = nc.reduce((s,m)=>s+(parseInt(m.memberCount||m.count||1)),0);
+
+  const overdueList  = nc.filter(m=>{ const d=m.followUpDue||m.dueDate||m.due; return d && d<todayStr && !(m.followUpDone||m.done); });
+  const upcomingList = nc.filter(m=>{ const d=m.followUpDue||m.dueDate||m.due; return d && d>=todayStr && !(m.followUpDone||m.done); });
+
+  document.getElementById('nc-kpi-registered').textContent = registered;
+  document.getElementById('nc-kpi-headcount').textContent  = headcount;
+  document.getElementById('nc-kpi-overdue').textContent    = overdueList.length;
+  document.getElementById('nc-kpi-upcoming').textContent   = upcomingList.length;
+  document.getElementById('nc-leg-overdue').textContent    = overdueList.length;
+  document.getElementById('nc-leg-upcoming').textContent   = upcomingList.length;
+
+  // Group by Sunday (joined date)
+  const weekMap={};
+  nc.forEach(m=>{
+    const d=m.joined||m.firstVisit||m.date||''; if(!d) return;
+    const dt=new Date(d+'T00:00:00'); const dow=dt.getDay(); const sun=new Date(dt); sun.setDate(dt.getDate()-dow);
+    const key=localDateStr(sun);
+    if(!weekMap[key]) weekMap[key]={newcomers:0,headcount:0};
+    weekMap[key].newcomers++;
+    weekMap[key].headcount+=(parseInt(m.memberCount||m.count||1));
+  });
+  const weeks=Object.keys(weekMap).sort().slice(-6);
+  const weekLabels=weeks.map(k=>{ const [y,mo,d]=k.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+mo-1]+' '+parseInt(d); });
+  const weekNc   = weeks.map(k=>weekMap[k].newcomers);
+  const weekHc   = weeks.map(k=>weekMap[k].headcount);
+
+  // Area map
+  const areaMap={};
+  nc.forEach(m=>{ const a=m.city||m.area||'Unknown'; areaMap[a]=(areaMap[a]||0)+1; });
+  const areaSorted=Object.entries(areaMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  const maxA=areaSorted.length?areaSorted[0][1]:1;
+  document.getElementById('nc-area-list').innerHTML = areaSorted.map(([name,cnt])=>`
+    <div class="area-row">
+      <span class="area-name">${escapeHtml(name)}</span>
+      <div class="area-bar-wrap"><div class="area-bar-fill" style="width:${Math.round(cnt/maxA*100)}%"></div></div>
+      <span class="area-count">${cnt}</span>
+    </div>`).join('') || '<div style="color:var(--slate-light);font-size:.82rem;">No area data yet.</div>';
+
+  // Family size distribution
+  const sizeMap={};
+  nc.forEach(m=>{ const s=parseInt(m.memberCount||m.count||1); sizeMap[s]=(sizeMap[s]||0)+1; });
+  const maxSize=Math.max(...Object.keys(sizeMap).map(Number),1);
+  const sizeLabels=Array.from({length:maxSize},(_,i)=>String(i+1));
+  const sizeData=sizeLabels.map(l=>sizeMap[+l]||0);
+
+  // Overdue follow-up list
+  const fuTitle=document.getElementById('nc-followup-title');
+  const fuList=document.getElementById('nc-followup-list');
+  if(overdueList.length){
+    if(fuTitle) fuTitle.textContent=`Overdue follow-ups (${overdueList.length})`;
+    fuList.innerHTML=overdueList.map(m=>{
+      const due=m.followUpDue||m.dueDate||m.due||'';
+      let daysLate='';
+      if(due){ const diff=Math.round((today-new Date(due+'T00:00:00'))/(86400000)); daysLate=diff>0?`OVERDUE ${diff}d`:'OVERDUE'; }
+      return `<div class="fu-row"><span>${escapeHtml(m.name)}</span><span class="fu-badge fu-overdue">${daysLate}</span></div>`;
+    }).join('');
+  } else {
+    if(fuTitle) fuTitle.textContent='Overdue follow-ups';
+    fuList.innerHTML='<div style="color:var(--text-secondary);font-size:.82rem;">No overdue follow-ups 🎉</div>';
+  }
+
+  // ── Charts (Chart.js) ──
+  if(typeof Chart==='undefined') return; // lib not loaded yet
+
+  const tc=NC_TICK(); const gc=NC_GRID(); const sc=NC_SURF();
+
+  // Week chart
+  const wCtx=document.getElementById('nc-week-chart');
+  if(wCtx){
+    if(_ncWeekChart) _ncWeekChart.destroy();
+    _ncWeekChart=new Chart(wCtx,{
+      type:'bar',
+      data:{ labels: weekLabels.length?weekLabels:['No data'],
+        datasets:[
+          {label:'Newcomers',data:weekNc.length?weekNc:[0],backgroundColor:String(getComputedStyle(document.documentElement).getPropertyValue('--gold')).trim()||'#D4A847',borderRadius:4,barThickness:32,yAxisID:'y'},
+          {label:'Headcount', data:weekHc.length?weekHc:[0],backgroundColor:'rgba(212,168,71,0.25)',borderRadius:4,barThickness:32,yAxisID:'y'}
+        ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:true,labels:{color:tc,font:{size:11},boxWidth:10,boxHeight:10}},tooltip:{callbacks:{label:c=>c.dataset.label+': '+c.raw}}},
+        scales:{x:{ticks:{color:tc,font:{size:11}},grid:{display:false},border:{display:false}},
+          y:{ticks:{color:tc,font:{size:10}},grid:{color:gc},border:{display:false}}}}
+    });
+  }
+
+  // Size chart
+  const sCtx=document.getElementById('nc-size-chart');
+  if(sCtx){
+    if(_ncSizeChart) _ncSizeChart.destroy();
+    _ncSizeChart=new Chart(sCtx,{
+      type:'bar',
+      data:{labels:sizeLabels.length?sizeLabels:['1'],datasets:[{label:'Families',data:sizeData.length?sizeData:[0],backgroundColor:'#1baf7a',borderRadius:4,barThickness:28}]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw+' famil'+(c.raw===1?'y':'ies')}}},
+        scales:{x:{title:{display:true,text:'Members per family',color:tc,font:{size:11}},ticks:{color:tc,font:{size:11}},grid:{display:false},border:{display:false}},
+          y:{ticks:{color:tc,font:{size:10}},grid:{color:gc},border:{display:false}}}}
+    });
+  }
+
+  // Fu donut
+  const fCtx=document.getElementById('nc-fu-chart');
+  if(fCtx){
+    if(_ncFuChart) _ncFuChart.destroy();
+    _ncFuChart=new Chart(fCtx,{
+      type:'doughnut',
+      data:{labels:['Overdue','Upcoming'],datasets:[{data:[overdueList.length,upcomingList.length],backgroundColor:['#eb6834','#1baf7a'],borderWidth:3,borderColor:sc,hoverOffset:4}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.label+': '+c.raw+' people'}}}}
+    });
+  }
+}
+
+function ncApplyPrintColors(printing){
+  const tc=printing?'#1a1a1a':'#8B95B0';
+  const gc=printing?'rgba(0,0,0,0.15)':'rgba(255,255,255,0.08)';
+  const sc=printing?'#f4f6fb':'#1C2030';
+  if(_ncWeekChart){
+    _ncWeekChart.options.scales.x.ticks.color=tc;
+    _ncWeekChart.options.scales.y.ticks.color=tc;
+    _ncWeekChart.options.scales.y.grid.color=gc;
+    _ncWeekChart.options.plugins.legend.labels.color=tc;
+    _ncWeekChart.update();
+  }
+  if(_ncSizeChart){
+    _ncSizeChart.options.scales.x.ticks.color=tc;
+    _ncSizeChart.options.scales.x.title.color=tc;
+    _ncSizeChart.options.scales.y.ticks.color=tc;
+    _ncSizeChart.options.scales.y.grid.color=gc;
+    _ncSizeChart.update();
+  }
+  if(_ncFuChart){
+    _ncFuChart.data.datasets[0].borderColor=sc;
+    _ncFuChart.update();
+  }
+}
+
+function ncExportPDF(){
+  ncApplyPrintColors(true);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ window.print(); }));
+}
+window.ncExportPDF=ncExportPDF;
+window.addEventListener('afterprint',()=>ncApplyPrintColors(false));
+
 // ── Boot ──
 window.addEventListener('resize', ()=>{ if(typeof renderCharts==='function') requestAnimationFrame(renderCharts); });
 (async function(){
@@ -2007,5 +2317,6 @@ window.addEventListener('resize', ()=>{ if(typeof renderCharts==='function') req
   }
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 </body>
 </html>
